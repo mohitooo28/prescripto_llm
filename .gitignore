@@ -1,0 +1,62 @@
+# Python virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs
+*.log
+```
+
+This will ignore:
+- Virtual environment directories (with various common names)
+- Your `.env` file with sensitive API keys
+- Common Python cache files and other development artifacts// filepath: d:\prescripto llm\.gitignore
+# Python virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs
+*.log
+```
+
+This will ignore:
+- Virtual environment directories (with various common names)
+- Your `.env` file with sensitive API keys
+- Common Python cache files and other development artifacts

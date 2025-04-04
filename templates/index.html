@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Prescripto</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark mode styles */
+        .dark {
+            background-color: #000000;
+            color: #f3f4f6;
+        }
+
+        /* Light theme styles remain original */
+        .light {
+            background-color: #f9fafb;
+            color: #111827;
+        }
+
+        /* Dark mode overrides */
+        .dark .bg-white {
+            background-color: #111827;
+            border-color: #1f2937;
+        }
+
+        .dark .text-gray-800 {
+            color: #f3f4f6;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #000000;
+        }
+
+        .dark .border-gray-200,
+        .dark .border-gray-300 {
+            border-color: #374151;
+        }
+
+        .dark .bg-blue-600 {
+            background-color: #3b82f6;
+        }
+
+        .dark .hover\:bg-blue-700:hover {
+            background-color: #2563eb;
+        }
+
+        .dark .bg-gray-600 {
+            background-color: #4b5563;
+        }
+
+        .dark .hover\:bg-gray-700:hover {
+            background-color: #374151;
+        }
+
+        .dark .text-blue-600 {
+            color: #60a5fa;
+        }
+
+        /* Search box specific dark mode styles */
+        .dark .input-tag {
+            color: #f3f4f6;
+        }
+
+        .dark .input-tag::placeholder {
+            color: #9ca3af;
+        }
+
+        .dark .bg-blue-100 {
+            background-color: #1e40af;
+        }
+
+        .dark .text-blue-800 {
+            color: #bfdbfe;
+        }
+
+        .dark .text-blue-600 {
+            color: #93c5fd;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a class="flex items-center font-semibold text-white" href="#">
+                    <img class="h-8 w-8 mx-4" src="{{ url_for('static', filename='logo.svg') }}" alt="Prescripto Logo">
+                    Prescripto
+                </a>
+                <button id="themeToggle" class="p-2 rounded-full focus:outline-none">
+                    <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white hidden" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Form -->
+    <div class="container mx-auto my-8 px-4">
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-8">
+            <form id="predictionForm">
+                <div class="mb-6">
+                    <label for="symptomsInput" class="block text-sm font-medium text-gray-700 mb-2">Enter
+                        Symptoms</label>
+                    <input type="text" id="symptomsInput" name="symptoms"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-gray-100 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                        placeholder="Describe your symptoms...">
+
+
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg">
+                        Predict
+                    </button>
+                    <button type="button"
+                        class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg"
+                        onclick="clearForm()">
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="container mx-auto my-8 px-4 hidden">
+        <div class="flex justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+        <p class="text-center mt-4 text-gray-600">Analyzing symptoms...</p>
+    </div>
+
+    <!-- Results Section (Initially Hidden) -->
+    <div id="resultsSection" class="container mx-auto my-8 px-4 hidden">
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-8">
+            <h2 class="text-2xl font-semibold text-blue-600 text-center mb-6">Prescripto Diagnosis Results</h2>
+
+            <!-- Predicted Disease -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Predicted Condition:</h3>
+                <div id="resultDisease" class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    Loading...
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Description:</h3>
+                <div id="resultDescription" class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    Loading...
+                </div>
+            </div>
+
+            <!-- Medications -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Recommended Medicines:</h3>
+                <div class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                    <div id="medicationsList" class="divide-y divide-gray-200">
+                        <!-- Medications will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            <!-- Tips Section -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Tips:</h3>
+                <div id="resultTips" class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    Loading...
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="mt-6 p-4 bg-blue-100 text-blue-800 rounded-lg">
+                <p class="text-sm">
+                    <strong>Important:</strong> This information is for educational purposes only and should not replace
+                    professional medical advice. Always consult a healthcare provider for serious or persistent
+                    symptoms.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const moonIcon = document.getElementById('moonIcon');
+        const sunIcon = document.getElementById('sunIcon');
+        const html = document.documentElement;
+
+        // Check for saved theme preference or use light theme as default
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            html.classList.add('dark');
+            moonIcon.classList.add('hidden');
+            sunIcon.classList.remove('hidden');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        });
+
+        // Form submission handler
+        document.getElementById('predictionForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const symptomsInput = document.getElementById('symptomsInput').value.trim();
+
+            if (!symptomsInput) {
+                alert('Please enter your symptoms');
+                return;
+            }
+
+            // Show loading indicator
+            document.getElementById('loadingIndicator').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ symptoms: symptomsInput }),
+                });
+
+                const data = await response.json();
+
+                // Update results
+                document.getElementById('resultDisease').textContent = data.disease;
+                document.getElementById('resultDescription').textContent = data.description;
+                document.getElementById('resultTips').textContent = data.tips;
+
+                // Update medications list
+                const medicationsList = document.getElementById('medicationsList');
+                medicationsList.innerHTML = ''; // Clear existing items
+
+                if (data.medications && data.medications.length > 0) {
+                    data.medications.forEach(med => {
+                        const medDiv = document.createElement('div');
+                        medDiv.className = 'p-3 transition-colors';
+                        medDiv.textContent = med;
+                        medicationsList.appendChild(medDiv);
+                    });
+                } else {
+                    const medDiv = document.createElement('div');
+                    medDiv.className = 'p-3';
+                    medDiv.textContent = 'No specific medications recommended';
+                    medicationsList.appendChild(medDiv);
+                }
+
+                // Hide loading, show results
+                document.getElementById('loadingIndicator').classList.add('hidden');
+                document.getElementById('resultsSection').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request. Please try again.');
+                document.getElementById('loadingIndicator').classList.add('hidden');
+            }
+        });
+
+        // Clear the form and hide results
+        function clearForm() {
+            document.getElementById('symptomsInput').value = '';
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('loadingIndicator').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>
