@@ -29,40 +29,38 @@ It is **not a substitute for professional medical advice, diagnosis, or treatmen
 ## 🔧 Installation
 
 1. **Clone the repository:**
-```bash
-git clone https://github.com/mohitooo28/prescripto_llm.git
-cd prescripto-llm
-```
+   ```bash
+    git clone https://github.com/mohitooo28/prescripto_llm.git
+    cd prescripto-llm
+   ```
 
 
 2. Create a virtual environment and activate it:
-```bash
-python -m venv venv
+   ```bash
+   python -m venv venv
 
-# On Windows
-venv\Scripts\activate
+   # On Windows
+   venv\Scripts\activate
 
-# On macOS/Linux
-source venv/bin/activate
-```
+   # On macOS/Linux
+   source venv/bin/activate
+   ```
 
 
 3. Install the dependencies:
-```bash
-pip install -r requirements.txt
-```
-
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 4. Create a `.env` file in the root directory by copying `.env_example`:
-```bash
-cp .env_example .env
-```
-
+   ```
+   cp .env_example .env
+   ```
 
 5. Add your Google Gemini API key to the `.env` file:
-```
-GEMINI_API_KEY=your_api_key_here
-```
+   ```
+   GEMINI_API_KEY=your_api_key_here
+   ```
 
 ## 🏃‍♂️ Running the Application
 
